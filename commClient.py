@@ -72,7 +72,7 @@ class ClientCommService:
             except:
                 log.info("ClientHandler could not parse JSON string: %s" % repr(rxdata))
                 continue
-            print t 
+           # print t 
             log.debug('Client RX jdata: %s'  %(repr(data)))
 	    
 	    if data == '':
@@ -97,8 +97,24 @@ class ClientCommService:
     def stop(self):
         self.active = False
 
+#global data structure for client data
+clients = []
 def echoHello(message):
-    print "message received"
+    print "message received", message, "\n"
+    
+
+
+
+
+    i = 0
+    dic = eval(message)
+    while clients[i].clientId != dic['src'] :
+	i = i + 1
+    dic['message'] = dic['message'] + 1
+   # if dic['message'] < 10:
+    clients[i].sendData(str(dic))  
+    time.sleep(0.2); 
+	
 
 
 if __name__ == "__main__":
@@ -126,11 +142,14 @@ if __name__ == "__main__":
     client.initCommClient('localhost',echoHello)
     dic = {'src' : clientId, 'message' : 'success'}
 
-    client.sendData(str(dic))
+    #client.sendData(str(dic))
 
+    clients.append(client)
+    dic['message']= 'pointer success'
+    #clients[0].sendData(str(dic))
     #  Example code snippet: sending multiple messages from the same client
     i = 0 
-    while i < 10:
+    while i < 0:
 	dic = {'src' : client.clientId, 'message': i}
 	client.sendData(str(dic))
 	#sleep to avoid message concatination on the server
@@ -150,8 +169,9 @@ if __name__ == "__main__":
        # client.sendData(str(dic))
 	clients.append(client)
 
-
-
+    #   Example code snippet: volley
+    dic['message'] = 1
+    client.sendData(str(dic))
 
 
     tmp = raw_input("press enter to kill client\n")

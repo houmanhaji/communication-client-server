@@ -14,7 +14,7 @@ TXTIMEOUT=1
 
 
 log = logging.getLogger(__name__)
-
+logging.basicConfig(filename=__name__)
 class ServerCommService:
     
     def __init__(self):
@@ -157,6 +157,8 @@ def echohandler(message):
     for j in msg:
     	dic = eval(j)
     	server.sendData(dic['src'],dic)
+
+
 
 
 if __name__ == "__main__":
